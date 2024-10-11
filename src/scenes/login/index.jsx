@@ -12,10 +12,10 @@ const Login = () => {
   useEffect(() => {
     const TOKEN = localStorage.getItem("token");
     const PUBLIC_ROUTES = ["login", "forgot-password", "register", "documentation"];
-    const isPublicPage = PUBLIC_ROUTES.some(r => window.location.href.includes(r));
+    const isPublicPage = PUBLIC_ROUTES.some(route => window.location.href.includes(route));
 
     if (!TOKEN && !isPublicPage) {
-      window.location.href = '/login';
+      console.log("🚀 ~ useEffect ~ isPublicPage:", isPublicPage)
       return;
     } else {
       axios.defaults.headers.common['Authorization'] = `Bearer ${TOKEN}`;
