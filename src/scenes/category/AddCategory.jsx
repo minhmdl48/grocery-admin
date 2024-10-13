@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { Box, Button, Typography, TextField } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { useDropzone } from 'react-dropzone';
-import axios from 'axios';
-import { getToken } from '../../utils/auth'; // Adjust the import path as necessary
+import React, { useState } from "react";
+import { Box, Button, Typography, TextField } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useDropzone } from "react-dropzone";
+import axios from "axios";
+import { getToken } from "../../utils/auth";
 
 const AddCategory = () => {
-  const [category, setCategory] = useState({ name: '', image: null });
+  const [category, setCategory] = useState({ name: "", image: null });
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   const token = getToken();
@@ -32,24 +32,28 @@ const AddCategory = () => {
     e.preventDefault();
     if (validate()) {
       const formData = new FormData();
-      formData.append('name', category.name);
-      formData.append('image', category.image);
+      formData.append("name", category.name);
+      formData.append("image", category.image);
 
       try {
-        const response = await axios.post('https://groceries-production.up.railway.app/api/v1/category/create', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.post(
+          "https://groceries-production.up.railway.app/api/v1/category/create",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         console.log("Category added:", response.data);
         navigate("/categories");
       } catch (error) {
-        console.error('Error adding category:', error);
+        console.error("Error adding category:", error);
         if (error.response) {
-          console.error('Response data:', error.response.data);
-          console.error('Response status:', error.response.status);
-          console.error('Response headers:', error.response.headers);
+          console.error("Response data:", error.response.data);
+          console.error("Response status:", error.response.status);
+          console.error("Response headers:", error.response.headers);
         }
       }
     }
@@ -62,7 +66,10 @@ const AddCategory = () => {
     }));
   };
 
-  const { getRootProps, getInputProps } = useDropzone({ onDrop, accept: 'image/*' });
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    accept: "image/*",
+  });
 
   return (
     <Box m={2}>
@@ -73,22 +80,33 @@ const AddCategory = () => {
         <TextField
           label="Category Name"
           name="name"
-          value={category.name}
+          value={category.name || ""}
           onChange={handleChange}
           fullWidth
           margin="normal"
           error={!!errors.name}
           helperText={errors.name}
         />
-        <Box {...getRootProps()} border="1px dashed grey" p={2} textAlign="center" mb={2}>
+        <Box
+          {...getRootProps()}
+          border="1px dashed grey"
+          p={2}
+          textAlign="center"
+          mb={2}
+        >
           <input {...getInputProps()} />
           {category.image ? (
             <Typography>{category.image.name}</Typography>
           ) : (
-            <Typography>Drag 'n' drop an image here, or click to select one</Typography>
+            <Typography>
+              Drag 'n' drop an image here, or click to select one
+            </Typography>
           )}
         </Box>
         {errors.image && <Typography color="error">{errors.image}</Typography>}
+        {errors.submit && (
+          <Typography color="error">{errors.submit}</Typography>
+        )}
         <Button variant="contained" color="primary" type="submit">
           Add Category
         </Button>

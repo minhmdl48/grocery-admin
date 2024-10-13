@@ -1,31 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { Box, TextField, Button, Typography } from '@mui/material';
-import { useDropzone } from 'react-dropzone';
+import React, { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { Box, TextField, Button, Typography } from "@mui/material";
+import { useDropzone } from "react-dropzone";
+import { getToken } from "../../utils/auth";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 
 const UpdateCategory = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [categoryData, setCategoryData] = useState({});
-  const [token, setToken] = useState('');
-
-  useEffect(() => {
-    const fetchCategoryData = async () => {
-      try {
-        const response = await axios.get(`https://groceries-production.up.railway.app/api/v1/category/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setCategoryData(response.data);
-      } catch (error) {
-        console.error('Error fetching category data:', error);
-      }
-    };
-
-    fetchCategoryData();
-  }, [id, token]);
+  const [categoryData, setCategoryData] = useState({ name: "", image: null });
+  const token = getToken();
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -36,56 +22,110 @@ const UpdateCategory = () => {
   };
 
   const handleSave = async () => {
+    const formData = new FormData();
+    formData.append("name", categoryData.name);
+    if (categoryData.image instanceof File) {
+      formData.append("image", categoryData.image);
+    }
+
+    console.log("Data being sent:", {
+      id,
+      name: categoryData.name,
+      image:
+        categoryData.image instanceof File
+          ? categoryData.image.name
+          : categoryData.image,
+    });
+
     try {
-      const response = await axios.put(`https://groceries-production.up.railway.app/api/v1/category/update/${id}`, categoryData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log('Category updated:', response.data);
-      navigate('/categories');
+      const response = await axios.post(
+        `https://groceries-production.up.railway.app/api/v1/category/update/${id}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log("Category updated:", response.data);
+      navigate("/categories");
     } catch (error) {
-      console.error('Error updating category:', error);
+      console.error(
+        "Error updating category:",
+        error.response ? error.response.data : error.message
+      );
     }
   };
 
   const onDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
-    const reader = new FileReader();
-    reader.onload = () => {
-      setCategoryData((prevData) => ({
-        ...prevData,
-        image: reader.result,
-      }));
-    };
-    reader.readAsDataURL(file);
+    setCategoryData((prevData) => ({
+      ...prevData,
+      image: file,
+    }));
+  };
+
+  const handleCancel = () => {
+    navigate("/categories");
   };
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   return (
     <Box m={2}>
-      <Typography variant="h4">Update Category</Typography>
-      
-      <Typography variant="h6">{categoryData.name}</Typography>
-      {categoryData.image && (
-        <img src={categoryData.image} alt={categoryData.name} style={{ width: '200px', height: 'auto' }} />
-      )}
+      <Typography variant="h4">Edit Category</Typography>
+
       <TextField
         label="Category Name"
         name="name"
-        value={categoryData.name || ''}
+        value={categoryData.name}
         onChange={handleInputChange}
         fullWidth
         margin="normal"
       />
-      <Box {...getRootProps()} border="1px dashed gray" p={2} textAlign="center" mt={2}>
+      <Box
+        {...getRootProps()}
+        border="1px dashed gray"
+        p={5}
+        textAlign="center"
+        mt={2}
+      >
         <input {...getInputProps()} />
-        <Typography>Drag & drop an image here, or click to select one</Typography>
+        {!categoryData.image && (
+          <Typography>
+            Drag & drop an image here, or click to select one
+          </Typography>
+        )}
+        {categoryData.image && (
+          <Box mt={2}>
+            <img
+              src={URL.createObjectURL(categoryData.image)}
+              alt="Category"
+              style={{ width: "200px", height: "auto" }}
+            />
+          </Box>
+        )}
       </Box>
-      <Button variant="contained" color="primary" onClick={handleSave} mt={4}>
-        Save
-      </Button>
+      <Box mt={4} display="flex" justifyContent="flex-start">
+      <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSave}
+          style={{ marginRight: '8px' }}
+          startIcon={<EditOutlinedIcon />}
+        >
+          Save
+        </Button>
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={handleCancel}
+          startIcon={<DeleteOutlinedIcon />}
+        >
+          Cancel
+        </Button>
+      </Box>
     </Box>
   );
 };

@@ -60,7 +60,7 @@ const ProductsByCategory = () => {
                   <img src={product.image} alt={product.name} style={{ width: '100px', height: '100px' }} />
                 </TableCell>
                 <TableCell>{product.name}</TableCell>
-                <TableCell>{product.price}</TableCell>
+                <TableCell>{product.price} VND</TableCell>
                 <TableCell>{product.quantity}</TableCell>
                 <TableCell>{product.weight}</TableCell>
               </TableRow>

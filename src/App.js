@@ -12,6 +12,9 @@ import Sidebar from './scenes/global/Sidebar';
 import Products from './scenes/products';
 import UpdateCategory from './scenes/category/UpdateCategory';
 import Customers from './scenes/customer';
+import CreateUser from './scenes/customer/CreateUser';
+import UpdateProduct from './scenes/products/UpdateProduct';
+import UpdateCustomer from './scenes/customer/UpdateCustomer';
 import { useNavigate } from 'react-router-dom';
 import Chat from './scenes/chat';
 
@@ -57,9 +60,11 @@ function App() {
           <Route path="/categories/add" element={<ProtectedRoute isAuthenticated={isAuthenticated} loading={loading}><AddCategory /></ProtectedRoute>} />
           <Route path="/orders" element={<ProtectedRoute isAuthenticated={isAuthenticated} loading={loading}><Orders /></ProtectedRoute>} />
           <Route path="/customers" element={<ProtectedRoute isAuthenticated={isAuthenticated} loading={loading}><Customers/></ProtectedRoute>} />
-          <Route path="/update-category/:categoryId" element={<ProtectedRoute isAuthenticated={isAuthenticated} loading={loading}><UpdateCategory /></ProtectedRoute>} />
           <Route path="/categories/:categoryId" element={<ProtectedRoute isAuthenticated={isAuthenticated} loading={loading}><ProductsByCategory /></ProtectedRoute>} />
-
+          <Route path="/category/edit/:id" element={<ProtectedRoute isAuthenticated={isAuthenticated} loading={loading}><UpdateCategory /></ProtectedRoute>} />
+          <Route path="/create-user" element={<ProtectedRoute isAuthenticated={isAuthenticated} loading={loading}><CreateUser /></ProtectedRoute>} />
+          <Route path="/products/edit/:id" element={<ProtectedRoute isAuthenticated={isAuthenticated} loading={loading}><UpdateProduct /></ProtectedRoute>} />
+          <Route path='/user/edit/:id' element={<ProtectedRoute isAuthenticated={isAuthenticated} loading={loading}><UpdateCustomer /></ProtectedRoute>} />
           <Route path="/chat/:customerId" element={<ProtectedRoute isAuthenticated={isAuthenticated} loading={loading}><Chat/></ProtectedRoute>} />
         </Routes>
       </div>

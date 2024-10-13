@@ -12,7 +12,6 @@ import { getToken } from '../../utils/auth';
 
 const Topbar = () => {
   const theme = useTheme();
-  const colors = tokens(theme.pallette);
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
   const token = getToken();
@@ -45,22 +44,8 @@ const Topbar = () => {
 
   return (
     <Box display="flex" justifyContent="space-between" p={2}>
-      {/* search bar */}
-      <Box
-        display="flex"
-        backgroundColor={colors.primary[100]}
-        borderRadius="3px"
-      >
-        <InputBase
-          placeholder="Search"
-          sx={{ ml: 2, flex: 1 }}
-        />
-        <IconButton type="button" sx={{ p: 1 }}>
-          <SearchIcon />
-        </IconButton>
-      </Box>
       {/* right side icons */}
-      <Box display="flex">
+      <Box display="flex" alignItems="center" ml="auto">
         <IconButton>
           <NotificationsOutlinedIcon />
         </IconButton>

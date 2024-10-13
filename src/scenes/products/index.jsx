@@ -6,11 +6,14 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getToken} from '../../utils/auth';
+import { TextField } from '@mui/material';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
   const token = getToken();
+  const [page, setPage] = useState(1);
+  const [keyword, setKeyword] = useState('');
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -20,6 +23,10 @@ const Products = () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          params: {
+            page,
+            keyword,
+          }
         });
         console.log('Response:', response);
         setProducts(response.data.data.data || []);
@@ -29,7 +36,7 @@ const Products = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [token, page, keyword]);
 
   const handleAddProduct = () => {
     navigate('/products/add');
@@ -37,6 +44,14 @@ const Products = () => {
 
   const handleEditProduct = async (id) => {
     navigate(`/products/edit/${id}`);
+  };
+
+  const handlePageChange = (event) => {
+    setPage(event.target.value);
+  };
+
+  const handleKeywordChange = (event) => {
+    setKeyword(event.target.value);
   };
 
   const handleDeleteProduct = async (id) => {
@@ -55,6 +70,28 @@ const Products = () => {
         <Button variant="contained" color="primary" startIcon={<AddOutlinedIcon />} onClick={handleAddProduct}>
           Add Product
         </Button>
+      </Box>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={2}
+      >
+        <TextField
+          label="Page"
+          type="number"
+          value={page}
+          onChange={handlePageChange}
+          variant="outlined"
+          size="small"
+        />
+        <TextField
+          label="Search"
+          value={keyword}
+          onChange={handleKeywordChange}
+          variant="outlined"
+          size="small"
+        />
       </Box>
       <TableContainer component={Paper}>
         <Table>
@@ -75,7 +112,7 @@ const Products = () => {
                 <TableCell>{product.name}</TableCell>
                 <TableCell>{product.quantity}</TableCell>
                 <TableCell>{product.weight}</TableCell>
-                <TableCell>{product.price}</TableCell>
+                <TableCell>{product.price} VND</TableCell>
                 <TableCell>
                   <Button onClick={() => handleEditProduct(product.id)}><EditOutlinedIcon /></Button>
                   <Button onClick={() => handleDeleteProduct(product.id)}><DeleteOutlinedIcon /></Button>
