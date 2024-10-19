@@ -37,7 +37,7 @@ const AddCategory = () => {
 
       try {
         const response = await axios.post(
-          "https://groceries-production.up.railway.app/api/v1/category/create",
+          "https://zippy-enchantment-production.up.railway.app/api/v1/category/create",
           formData,
           {
             headers: {

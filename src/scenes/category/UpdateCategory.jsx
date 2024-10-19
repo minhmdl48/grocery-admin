@@ -39,7 +39,7 @@ const UpdateCategory = () => {
 
     try {
       const response = await axios.post(
-        `https://groceries-production.up.railway.app/api/v1/category/update/${id}`,
+        `https://zippy-enchantment-production.up.railway.app/api/v1/category/update/${id}`,
         formData,
         {
           headers: {

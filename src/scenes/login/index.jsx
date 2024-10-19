@@ -43,13 +43,13 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("https://groceries-production.up.railway.app/api/v1/auth/login", {
+      const response = await axios.post("https://zippy-enchantment-production.up.railway.app/api/v1/auth/login", {
         email,
         password,
       });
       if (response && response.data) {
-        const { access_token } = response.data; // Extract the access_token
-        localStorage.setItem("token", access_token); // Save the token in localStorage
+        const { access_token } = response.data;
+        localStorage.setItem("token", access_token);
         navigate("/dashboard");
       } else {
         setError("Unexpected response structure");

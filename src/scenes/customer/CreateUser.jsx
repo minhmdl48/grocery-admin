@@ -28,7 +28,7 @@ const CreateUser = () => {
     try {
       const token = getToken();
       const response = await axios.post(
-        "https://groceries-production.up.railway.app/api/v1/user/create",
+        "https://zippy-enchantment-production.up.railway.app/api/v1/user/create",
         formData,
         {
           headers: {

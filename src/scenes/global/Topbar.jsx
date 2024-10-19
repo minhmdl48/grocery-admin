@@ -30,7 +30,7 @@ const Topbar = () => {
         console.error('No token found');
         return;
       }
-      await axios.post('https://groceries-production.up.railway.app/api/v1/auth/logout', {}, {
+      await axios.post('https://zippy-enchantment-production.up.railway.app/api/v1/auth/logout', {}, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

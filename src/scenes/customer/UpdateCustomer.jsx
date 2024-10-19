@@ -21,7 +21,7 @@ const UpdateCustomer = () => {
   useEffect(() => {
     const fetchCustomerData = async () => {
       try {
-        const response = await axios.get(`https://groceries-production.up.railway.app/api/v1/user/edit/${id}`, {
+        const response = await axios.get(`https://zippy-enchantment-production.up.railway.app/api/v1/user/edit/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -46,7 +46,7 @@ const UpdateCustomer = () => {
 
   const handleSave = async () => {
     try {
-      const response = await axios.post(`https://groceries-production.up.railway.app/api/v1/user/update/${id}`, customerData, {
+      const response = await axios.post(`https://zippy-enchantment-production.up.railway.app/api/v1/user/update/${id}`, customerData, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
