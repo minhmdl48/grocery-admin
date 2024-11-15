@@ -16,7 +16,7 @@ const ProductsByCategory = () => {
           console.error('No token found');
           return;
         }
-        const response = await axios.get(`https://zippy-enchantment-production.up.railway.app/api/v1/product/product-by-category/${categoryId}`, {
+        const response = await axios.get(`https://backendgrocery-production.up.railway.app/api/v1/product/product-by-category/${categoryId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

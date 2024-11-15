@@ -19,7 +19,7 @@ const Products = () => {
     const fetchProducts = async () => {
       try {
         console.log('token:', token);
-        const response = await axios.get('https://zippy-enchantment-production.up.railway.app/api/v1/product/index', {
+        const response = await axios.get('https://backendgrocery-production.up.railway.app/api/v1/product/index', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -55,7 +55,7 @@ const Products = () => {
   };
 
   const handleDeleteProduct = async (id) => {
-    await axios.get(`https://zippy-enchantment-production.up.railway.app/api/v1/product/delete/${id}`, {
+    await axios.get(`https://backendgrocery-production.up.railway.app/api/v1/product/delete/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

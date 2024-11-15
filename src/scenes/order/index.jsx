@@ -28,7 +28,7 @@ const Orders = () => {
       const token = getToken();
       try {
         const response = await axios.get(
-          `https://zippy-enchantment-production.up.railway.app/api/v1/user/order-history-cms?page=${page}`,
+          `https://backendgrocery-production.up.railway.app/api/v1/user/order-history-cms?page=${page}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -59,7 +59,7 @@ const Orders = () => {
     const token = getToken();
     try {
       await axios.post(
-        "https://zippy-enchantment-production.up.railway.app/api/v1/user/update-order-status",
+        "https://backendgrocery-production.up.railway.app/api/v1/user/update-order-status",
         {
           status: newStatus,
           order_id: orderId,

@@ -10,7 +10,7 @@ const TopProducts = () => {
     const fetchTopProducts = async () => {
       try {
         const token = getToken();
-        const response = await axios.get('https://zippy-enchantment-production.up.railway.app/api/v1/dashboard/top-product', {
+        const response = await axios.get('https://backendgrocery-production.up.railway.app/api/v1/dashboard/top-product', {
           headers: {
             Authorization: `Bearer ${token}`
           }

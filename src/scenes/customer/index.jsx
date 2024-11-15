@@ -30,7 +30,7 @@ const Customers = () => {
     const fetchCustomers = async () => {
       try {
         const response = await axios.get(
-          "https://zippy-enchantment-production.up.railway.app/api/v1/user/index",
+          "https://backendgrocery-production.up.railway.app/api/v1/user/index",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -58,7 +58,7 @@ const Customers = () => {
     try {
       const token = getToken();
       await axios.get(
-        `https://zippy-enchantment-production.up.railway.app/api/v1/user/delete/${id}`,
+        `https://backendgrocery-production.up.railway.app/api/v1/user/delete/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

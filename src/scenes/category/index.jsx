@@ -31,7 +31,7 @@ const Categories = () => {
       }
       console.log("token:", token);
       const response = await axios.get(
-        "https://zippy-enchantment-production.up.railway.app/api/v1/category/index",
+        "https://backendgrocery-production.up.railway.app/api/v1/category/index",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -79,7 +79,7 @@ const Categories = () => {
   const handleDeleteCategory = async (id) => {
     try {
       const response = await axios.get(
-        `https://zippy-enchantment-production.up.railway.app/api/v1/category/delete/${id}`,
+        `https://backendgrocery-production.up.railway.app/api/v1/category/delete/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

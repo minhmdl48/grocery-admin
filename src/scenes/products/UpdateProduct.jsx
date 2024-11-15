@@ -37,7 +37,7 @@ const UpdateProduct = () => {
     const fetchProductData = async () => {
       try {
         const response = await axios.get(
-          `https://zippy-enchantment-production.up.railway.app/api/v1/product/edit/${id}`,
+          `https://backendgrocery-production.up.railway.app/api/v1/product/edit/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -54,7 +54,7 @@ const UpdateProduct = () => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get(
-          "https://zippy-enchantment-production.up.railway.app/api/v1/category/index",
+          "https://backendgrocery-production.up.railway.app/api/v1/category/index",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -102,7 +102,7 @@ const UpdateProduct = () => {
 
     try {
       const response = await axios.post(
-        `https://zippy-enchantment-production.up.railway.app/api/v1/product/update/${id}`,
+        `https://backendgrocery-production.up.railway.app/api/v1/product/update/${id}`,
         formData,
         {
           headers: {

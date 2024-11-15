@@ -56,7 +56,7 @@ function LineChart() {
       try {
         const token = getToken();
         const response = await axios.get(
-          "https://zippy-enchantment-production.up.railway.app/api/v1/user/order-history-cms",
+          "https://backendgrocery-production.up.railway.app/api/v1/user/order-history-cms",
           {
             headers: {
               Authorization: `Bearer ${token}`,
