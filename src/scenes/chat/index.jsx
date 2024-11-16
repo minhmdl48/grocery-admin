@@ -1,7 +1,6 @@
 // ChatApp.js
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import echo from '../../chat';
 import { getToken } from '../../utils/auth';
 
 
@@ -14,29 +13,7 @@ const ChatApp = () => {
    
     useEffect(() => {
       // Bind to the 'connected' event to retrieve the socket ID
-      echo.connector.pusher.connection.bind('connected', () => {
-          const socketId = echo.connector.pusher.connection.socket_id;
-          console.log('Socket ID:', socketId);
-
-          // Join the presence channel
-          echo.join('chat')
-          .here((users) => {
-              console.log('Users in the channel:', users);
-          })
-          .joining((user) => {
-              console.log('User joined:', user);
-          })
-          .leaving((user) => {
-              console.log('User left:', user);
-          })
-          .listen('MessageSent', (e) => {
-              console.log('New message received:', e.message);
-              setMessages((prevMessages) => [...prevMessages, e.message]);
-          })
-          .error((error) => {
-              console.error('Error joining the channel:', error);
-          });
-      });
+      
 
       // Fetch existing messages on load
       const fetchMessages = async () => {
@@ -55,9 +32,7 @@ const ChatApp = () => {
       fetchMessages();
 
       // Cleanup the channel on component unmount
-      return () => {
-          echo.leave('presence-chat');
-      };
+      
   }, [token]);
 
     const fetchMessages = async () => {
@@ -78,19 +53,7 @@ const ChatApp = () => {
 
         try {
             // Obtain the socket ID
-            const socketId = echo.connector.pusher.connection.socket_id;
             
-            await axios.post('http://192.168.1.22:8000/api/v1/chat/send', 
-                { content: message ,
-                  chat_with: 2
-                }, 
-                {
-                    headers: {
-                        'X-Socket-ID': socketId,
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            );
 
             setMessage(''); // Clear input field
         } catch (error) {
