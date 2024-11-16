@@ -49,6 +49,8 @@ const Orders = () => {
           paymentStatus: order.payment_status,
           orderStatus: order.order_status,
           total: `${order.total_amount} VND`,
+          phone: order.phone,
+          address: order.address,
           orderItems: order.order_items, // Add order items to the order object
         }));
         setOrders(fetchedOrders);
@@ -110,6 +112,8 @@ const Orders = () => {
                   <TableCell>Order ID</TableCell>
                   <TableCell>Date</TableCell>
                   <TableCell>Customer</TableCell>
+                  <TableCell>Phone</TableCell>
+                  <TableCell>Address</TableCell>
                   <TableCell>Payment Status</TableCell>
                   <TableCell>Order Status</TableCell>
                   <TableCell>Total</TableCell>
@@ -123,6 +127,8 @@ const Orders = () => {
                       <TableCell>{order.id}</TableCell>
                       <TableCell>{order.date}</TableCell>
                       <TableCell>{order.customer}</TableCell>
+                      <TableCell>{order.phone}</TableCell>
+                      <TableCell>{order.address}</TableCell>
                       <TableCell>{order.paymentStatus}</TableCell>
                       <TableCell>
                         <Select
@@ -151,7 +157,7 @@ const Orders = () => {
                     </TableRow>
                     {expandedOrderId === order.id && (
                       <TableRow>
-                        <TableCell colSpan={7}>
+                        <TableCell colSpan={9}>
                           <Accordion expanded>
                             <AccordionDetails>
                               <Table>
