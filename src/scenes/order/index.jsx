@@ -76,9 +76,9 @@ const Orders = () => {
   const handleStatusChange = async (orderId, newStatus) => {
     const token = getToken();
     try {
-      await axios.put(
-        `https://backendgrocery-production.up.railway.app/api/v1/user/update-order-status/${orderId}`,
-        { order_status: newStatus },
+      await axios.post(
+        `https://backendgrocery-production.up.railway.app/api/v1/user/update-order-status`,
+        { status: newStatus, order_id: orderId },
         {
           headers: {
             Authorization: `Bearer ${token}`,
