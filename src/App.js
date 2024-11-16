@@ -19,30 +19,38 @@ import { useNavigate } from 'react-router-dom';
 import Chat from './scenes/chat';
 
 const ProtectedRoute = ({ children, isAuthenticated , loading}) => {
-  if (loading) {
-    return null;
-  }
-  if (!isAuthenticated) {
-    return <Navigate to="/login" />;
-  }
+  console.log("🚀 ~ ProtectedRoute ~ isAuthenticated:", isAuthenticated)
+  console.log("🚀 ~ ProtectedRoute ~ loading:", loading)
+  console.log("🚀 ~ ProtectedRoute ~ children:", children)
+  // if (loading) {
+
+  //   return null;
+  // }
+  // if (!isAuthenticated) {
+  //   return <Navigate to="/login" />;
+  // }
   return children;
 };
+
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true); 
+  const token = localStorage.getItem('token');
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    console.log("🚀 ~ useEffect ~ token:", token)
     if (token) {
+
       setIsAuthenticated(true);
+      navigate('/dashboard'); 
     } else {
       setIsAuthenticated(false);
       navigate('/login'); 
     }
     setLoading(false);
-  }, []);
+  }, [token]);
   
 
 
