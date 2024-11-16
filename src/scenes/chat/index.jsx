@@ -1,38 +1,108 @@
 // ChatApp.js
-import { height } from '@mui/system';
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import io from 'socket.io-client';
+import echo from '../../chat';
+import { getToken } from '../../utils/auth';
 
-const socket = io('http://localhost:3000'); // Thay đổi URL theo máy chủ của bạn
 
 const ChatApp = () => {
-const [message, setMessage] = useState('');
+
   const [messages, setMessages] = useState([]);
+    const [message, setMessage] = useState('');
+    const token = getToken();
 
-  const handleSendMessage = () => {
-    if (message.trim()) {
-      const userMessage = {
-        text: `Bạn: ${message}`,
-        sender: 'user',
-        timestamp: new Date().toLocaleTimeString(),
+   
+    useEffect(() => {
+      // Bind to the 'connected' event to retrieve the socket ID
+      echo.connector.pusher.connection.bind('connected', () => {
+          const socketId = echo.connector.pusher.connection.socket_id;
+          console.log('Socket ID:', socketId);
+
+          // Join the presence channel
+          echo.join('chat')
+          .here((users) => {
+              console.log('Users in the channel:', users);
+          })
+          .joining((user) => {
+              console.log('User joined:', user);
+          })
+          .leaving((user) => {
+              console.log('User left:', user);
+          })
+          .listen('MessageSent', (e) => {
+              console.log('New message received:', e.message);
+              setMessages((prevMessages) => [...prevMessages, e.message]);
+          })
+          .error((error) => {
+              console.error('Error joining the channel:', error);
+          });
+      });
+
+      // Fetch existing messages on load
+      const fetchMessages = async () => {
+          try {
+              const response = await axios.get('http://192.168.1.22:8000/api/v1/chat/messages', {
+                  headers: {
+                      Authorization: `Bearer ${token}`
+                  }
+              });
+              setMessages(response.data.messages);
+          } catch (error) {
+              console.error('Error fetching messages:', error);
+          }
       };
-      setMessages((prevMessages) => [...prevMessages, userMessage]);
 
-      // Phản hồi từ "mobile" sau 1 giây
-      setTimeout(() => {
-        const mobileMessage = {
-          text: 'This is a response from the mobile.',
-          sender: 'mobile',
-          timestamp: new Date().toLocaleTimeString(),
-        };
-        setMessages((prevMessages) => [...prevMessages, mobileMessage]);
-      }, 1000);
+      fetchMessages();
 
-      // Xóa tin nhắn sau khi gửi
-      setMessage('');
-    }
-  };
+      // Cleanup the channel on component unmount
+      return () => {
+          echo.leave('presence-chat');
+      };
+  }, [token]);
 
+    const fetchMessages = async () => {
+        try {
+            const response = await axios.get('http://192.168.1.22:8000/api/v1/chat/messages', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            setMessages(response.data.messages);
+        } catch (error) {
+            console.error('Error fetching messages:', error);
+        }
+    };
+
+    const handleSendMessage = async () => {
+        if (!message.trim()) return;
+
+        try {
+            // Obtain the socket ID
+            const socketId = echo.connector.pusher.connection.socket_id;
+            
+            await axios.post('http://192.168.1.22:8000/api/v1/chat/send', 
+                { content: message ,
+                  chat_with: 2
+                }, 
+                {
+                    headers: {
+                        'X-Socket-ID': socketId,
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            setMessage(''); // Clear input field
+        } catch (error) {
+            console.error('Error sending message:', error);
+        }
+    };
+
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            handleSendMessage();
+        }
+    };
 
   return (
     <div style={styles.container}>
