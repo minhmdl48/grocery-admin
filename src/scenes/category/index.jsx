@@ -7,6 +7,7 @@ import {
   CardMedia,
   CardContent,
   TextField,
+  Pagination
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import Grid2 from "@mui/material/Grid2";
@@ -18,8 +19,11 @@ import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
-  const [page, setPage] = useState(1);
-  const [keyword, setKeyword] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [keyword, setKeyword] = useState('');
   const navigate = useNavigate();
   const token = getToken();
 
@@ -37,7 +41,7 @@ const Categories = () => {
             Authorization: `Bearer ${token}`,
           },
           params: {
-            page,
+            page: currentPage,
             keyword,
           },
         }
@@ -46,6 +50,7 @@ const Categories = () => {
       const data = response.data.data.data;
       if (Array.isArray(data)) {
         setCategories(data);
+        setLoading(false);
       } else {
         console.error("Unexpected response format:", data);
         setCategories([]);
@@ -58,14 +63,15 @@ const Categories = () => {
 
   useEffect(() => {
     fetchCategories();
-  }, [token, page, keyword]);
+  }, [token, currentPage, keyword]);
 
   const handleAddCategory = () => {
     navigate("/categories/add");
   };
 
-  const handlePageChange = (event) => {
-    setPage(event.target.value);
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+    setLoading(true);
   };
 
   const handleKeywordChange = (event) => {
@@ -123,14 +129,6 @@ const Categories = () => {
         mb={2}
       >
         <TextField
-          label="Page"
-          type="number"
-          value={page}
-          onChange={handlePageChange}
-          variant="outlined"
-          size="small"
-        />
-        <TextField
           label="Search"
           value={keyword}
           onChange={handleKeywordChange}
@@ -181,6 +179,13 @@ const Categories = () => {
           </Grid2>
         ))}
       </Grid2>
+      <Box mt={2} display="flex" justifyContent="center">
+            <Pagination
+              count={totalPages}
+              page={currentPage}
+              onChange={handlePageChange}
+            />
+          </Box>
     </Box>
   );
 };

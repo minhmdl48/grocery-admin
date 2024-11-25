@@ -26,7 +26,16 @@ const UpdateCustomer = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        setCustomerData(response.data);
+        setCustomerData({
+          user_name: response.data.data.user_name,
+          email: response.data.data.email,
+          password: '',
+          phone: response.data.data.phone,
+        });
+        console.log('email', response.data.data.email);
+        console.log('user_name', response.data.data.user_name);
+        console.log('phone', response.data.data.phone);
+        console.log('customer data', customerData);
       } catch (error) {
         console.error('Error fetching customer data:', error);
         setError(error.response ? error.response.data.message : error.message);
@@ -52,7 +61,7 @@ const UpdateCustomer = () => {
           'Content-Type': 'application/json',
         },
       });
-      console.log('Customer updated:', response.data);
+      console.log('Customer updated:', customerData);
       navigate('/customers');
     } catch (error) {
       console.error('Error updating customer:', error.response ? error.response.data : error.message);

@@ -22,13 +22,7 @@ const ProtectedRoute = ({ children, isAuthenticated , loading}) => {
   console.log("🚀 ~ ProtectedRoute ~ isAuthenticated:", isAuthenticated)
   console.log("🚀 ~ ProtectedRoute ~ loading:", loading)
   console.log("🚀 ~ ProtectedRoute ~ children:", children)
-  // if (loading) {
-
-  //   return null;
-  // }
-  // if (!isAuthenticated) {
-  //   return <Navigate to="/login" />;
-  // }
+ 
   return children;
 };
 
@@ -44,7 +38,6 @@ function App() {
     if (token) {
 
       setIsAuthenticated(true);
-      navigate('/dashboard'); 
     } else {
       setIsAuthenticated(false);
       navigate('/login'); 
@@ -73,7 +66,7 @@ function App() {
           <Route path="/create-user" element={<ProtectedRoute isAuthenticated={isAuthenticated} loading={loading}><CreateUser /></ProtectedRoute>} />
           <Route path="/products/edit/:id" element={<ProtectedRoute isAuthenticated={isAuthenticated} loading={loading}><UpdateProduct /></ProtectedRoute>} />
           <Route path='/user/edit/:id' element={<ProtectedRoute isAuthenticated={isAuthenticated} loading={loading}><UpdateCustomer /></ProtectedRoute>} />
-          <Route path="/chat/:customerId" element={<ProtectedRoute isAuthenticated={isAuthenticated} loading={loading}><Chat/></ProtectedRoute>} />
+          <Route path="/chat/:id" element={<ProtectedRoute isAuthenticated={isAuthenticated} loading={loading}><Chat/></ProtectedRoute>} />
         </Routes>
       </div>
     </div>
