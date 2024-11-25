@@ -29,10 +29,11 @@ const Orders = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [expandedOrderId, setExpandedOrderId] = useState(null);
+  const [customers, setCustomers] = useState([]);
+  const token = getToken();
 
   useEffect(() => {
     const fetchOrders = async (page) => {
-      const token = getToken();
       try {
         const response = await axios.get(
           `https://backendgrocery-production.up.railway.app/api/v1/user/order-history-cms?page=${page}`,
@@ -62,8 +63,36 @@ const Orders = () => {
       }
     };
 
+    const fetchCustomers = async () => {
+      try {
+        const response = await axios.get("https://backendgrocery-production.up.railway.app/api/v1/user/index", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            page: 1,
+            keyword: '',
+          },
+        });
+        const allCustomers = response.data.data.data;
+        const userCustomers = allCustomers.filter(customer => customer.role === "user");
+        setCustomers(userCustomers);
+      } catch (error) {
+        console.error("Error fetching customers:", error);
+      }
+    };
+    fetchCustomers();
+
     fetchOrders(currentPage);
   }, [currentPage]);
+
+  const customerMap = customers.reduce((map, customer) => {
+    map[customer.id] = customer.user_name;
+    console.log("customer", customer);
+    return map;
+  }, {});
+
+  const sortedOrders = [...orders].sort((a, b) => b.id - a.id);
 
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
@@ -121,12 +150,12 @@ const Orders = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {orders.map((order) => (
+                {sortedOrders.map((order) => (
                   <React.Fragment key={order.id}>
                     <TableRow>
                       <TableCell>{order.id}</TableCell>
                       <TableCell>{order.date}</TableCell>
-                      <TableCell>{order.customer}</TableCell>
+                      <TableCell>{customerMap[order.customer] || 'Unknown'}</TableCell>
                       <TableCell>{order.phone}</TableCell>
                       <TableCell>{order.address}</TableCell>
                       <TableCell>{order.paymentStatus}</TableCell>

@@ -11,13 +11,14 @@ import {
   TableRow,
   Paper,
   Button,
+  TextField,
 } from "@mui/material";
 import { getToken } from "../../utils/auth";
 import { useNavigate } from "react-router-dom";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
-import TextField from "@mui/material/TextField";
 import AddIcon from "@mui/icons-material/Add";
+import ChatIcon from "@mui/icons-material/Chat";
 
 const Customers = () => {
   const [customers, setCustomers] = useState([]);
@@ -47,16 +48,19 @@ const Customers = () => {
         );
         setCustomers(userCustomers);
       } catch (error) {
-        console.error("Error fetching customer data:", error);
+        console.error("Error fetching customers:", error);
       }
     };
 
     fetchCustomers();
-  }, [token, page, keyword]);
+  }, [page, keyword, token]);
+
+  const handleChat = (customerId) => {
+    navigate(`/chat/${customerId}`);
+  };
 
   const handleDeleteCustomer = async (id) => {
     try {
-      const token = getToken();
       await axios.get(
         `https://backendgrocery-production.up.railway.app/api/v1/user/delete/${id}`,
         {
@@ -65,78 +69,37 @@ const Customers = () => {
           },
         }
       );
-      setCustomers(customers.filter((customer) => customer.id !== id));
+      setCustomers((prevCustomers) =>
+        prevCustomers.filter((customer) => customer.id !== id)
+      );
     } catch (error) {
       console.error("Error deleting customer:", error);
     }
   };
 
-  const handlePageChange = (event) => {
-    setPage(event.target.value);
-  };
-
-  const handleKeywordChange = (event) => {
-    setKeyword(event.target.value);
-  };
-
-  const handleUpdateCustomer = (id) => {
-    navigate(`/user/edit/${id}`);
-  };
-
-  const handleAddCustomer = () => {
-    navigate("/create-user");
-  };
-
   return (
     <Box m={2}>
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={2}
-      >
-        <Typography variant="h4">Customer</Typography>
+      <Typography variant="h4" gutterBottom>
+        Customers
+      </Typography>
+      <Box mb={2} display="flex" justifyContent="space-between">
         <Button
           variant="contained"
           color="primary"
           startIcon={<AddIcon />}
-          onClick={handleAddCustomer}
+          onClick={() => navigate("/create-user")}
         >
           Add Customer
         </Button>
-      </Box>
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={2}
-      >
-        <TextField
-          label="Page"
-          type="number"
-          value={page}
-          onChange={handlePageChange}
-          variant="outlined"
-          size="small"
-        />
-        <TextField
-          label="Search"
-          value={keyword}
-          onChange={handleKeywordChange}
-          variant="outlined"
-          size="small"
-        />
       </Box>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
               <TableCell>ID</TableCell>
+              <TableCell>Name</TableCell>
               <TableCell>Email</TableCell>
               <TableCell>Phone</TableCell>
-              <TableCell>User Name</TableCell>
-              <TableCell>Created At</TableCell>
-              <TableCell>Updated At</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -144,30 +107,33 @@ const Customers = () => {
             {customers.map((customer) => (
               <TableRow key={customer.id}>
                 <TableCell>{customer.id}</TableCell>
+                <TableCell>{customer.user_name}</TableCell>
                 <TableCell>{customer.email}</TableCell>
                 <TableCell>{customer.phone}</TableCell>
-                <TableCell>{customer.user_name}</TableCell>
-                <TableCell>
-                  {new Date(customer.created_at).toLocaleString()}
-                </TableCell>
-                <TableCell>
-                  {new Date(customer.updated_at).toLocaleString()}
-                </TableCell>
                 <TableCell>
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => handleUpdateCustomer(customer.id)}
-                    style={{ marginRight: "8px" }}
-                    startIcon={<EditOutlinedIcon />}
+                    startIcon={<ChatIcon />}
+                    onClick={() => handleChat(customer.id)}
                   >
-                    Update
+                    Chat
                   </Button>
                   <Button
-                    variant="outlined"
+                    variant="contained"
                     color="secondary"
-                    onClick={() => handleDeleteCustomer(customer.id)}
+                    startIcon={<EditOutlinedIcon />}
+                    onClick={() => navigate(`/user/edit/${customer.id}`)}
+                    style={{ marginLeft: "8px" }}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="error"
                     startIcon={<DeleteOutlinedIcon />}
+                    onClick={() => handleDeleteCustomer(customer.id)}
+                    style={{ marginLeft: "8px" }}
                   >
                     Delete
                   </Button>

@@ -106,13 +106,6 @@ const Sidebar = () => {
                   setSelected={setSelected}
               />
 
-              <Item
-                title="Reports"
-                to="/reports"
-                icon={<ShowChartOutlinedIcon />}
-                selected={selected}
-                setSelected={setSelected}
-              />
             </Box>
           </MenuItem>
         </Menu>

@@ -42,9 +42,9 @@ const Dashboard = () => {
         <Box mr={4} mt={2} >
           <TopProducts />
         </Box>
-        <Box mr={4} mt={2}>
+        {/* <Box mr={4} mt={2}>
           <RecentTransactions />
-        </Box>
+        </Box> */}
       </Box>
     </Box>
 );

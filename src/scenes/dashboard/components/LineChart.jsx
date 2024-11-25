@@ -65,7 +65,7 @@ function LineChart() {
         );
         const orders = response.data.data.data;
 
-        // Process the orders to count monthly orders
+        // Count monthly orders
         const monthlyOrders = Array(12).fill(0);
         orders.forEach((order) => {
           const orderDate = new Date(order.created_at);
